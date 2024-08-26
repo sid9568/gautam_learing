@@ -1,0 +1,67 @@
+<%=turbo_frame_tag "don" do%>
+<style>
+/* Custom styles */
+.custom-container {
+background-color: #ffffff;
+padding: 30px;
+border-radius: 10px;
+box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+margin-top: 80px;
+}
+</style>
+<div class="container">
+	<div class="row justify-content-center">
+		<div class="col-md-6 custom-container">
+			<h2 class="text-center mb-4 text-dark fw-bold">Add Excries</h2>
+			<form action="/user/excires" method="POST" enctype="multipart/form-data">
+				<div class="form-group">
+					<label for="title" class="fw-bold text-dark mb-2">Title</label>
+					<input type="course_name" name="title" class="form-control p-2 rounded" id="title" placeholder="Enter Title" required>
+				</div><br>
+				<div class="form-group">
+					<label for="categorySelect" class="fw-bold text-dark mb-2">User</label>
+					<select name="user_id" class="form-control p-2 rounded h-auto" id="categorySelect">
+						<option value="">All</option>
+						<%User.all.each do |u|%>
+						<option value="<%=u.id%>"><%=u.fname%></option>
+						<%end%>
+					</select>
+				</div><br>
+				<div>
+					<label for="categorySelect" class="fw-bold text-dark mb-2">Course</label>
+					<select name="course_id" class="form-control p-2 rounded h-auto" id="categorySelect">
+						<option value="">All</option>
+						<%Course.all.each do |course|%>
+						<option value="<%=course.id%>"><%=course.course_name%></option>
+						<%end%>
+					</select>
+				</div><br>
+				<div class="d-flex justify-content-center gap-3">
+					<a href="<%=user_coures_path%>">
+						<div class="text-center">
+							<button type="submit" class="w-150 p-2 rounded btn-danger">Cancel</button>
+						</div>
+					</a>
+					<div class="text-center">
+						<button type="submit" class="w-150 p-2 rounded btn btn-primary btn-block" style="background-color: #007A38;">Sumbit</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+function displayImage() {
+var fileInput = document.getElementById('file');
+var filePreview = document.getElementById('filePreview');
+var placeholder = document.getElementById('placeholder');
+if (fileInput.files && fileInput.files[0]) {
+var reader = new FileReader();
+reader.onload = function(e) {
+placeholder.src = e.target.result;
+}
+reader.readAsDataURL(fileInput.files[0]);
+}
+}
+</script>
+<%end%>

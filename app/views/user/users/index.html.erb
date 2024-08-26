@@ -1,0 +1,107 @@
+<style>
+.ibox-title {
+padding: 15px;
+}
+</style>
+<%=turbo_frame_tag "don" do%>
+<div class="wrapper wrapper-content animated fadeIn">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="ibox float-e-margins">
+				<div class="d-flex justify-content-between align-items-center ibox-title" style="border-radius: 10px;">
+					<div class="list text-black">
+						<h2 class="mb-1">User</h2>
+						<ol class="breadcrumb">
+							<li class="breadcrumb-item">
+								<a href="<%= root_path %>">Dashboard </a>
+							</li>
+						</ol>
+					</div>
+					<%#= link_to "Add Course", root_path,data: { "turbo-frame": "don" } , class:"btn btn-primary fw-bolder"%>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- <div class="row"> -->
+	<div class="form-group mb-3">
+		<%= form_with url: root_path, method: :get, local: true, html: { data: { 'turbo-frame' => 'don_1', controller: "form-submit", form_submit_target: "form" } } do |form| %>
+		<div class="row">
+			<div class="col-sm-6 col-lg-6">
+				<div class="form-group has-search text-right ml-auto">
+					<input type="text" value="<%=params[:keyword]%>" name="keyword" class="form-control py-2 px-3 lh-lg rounded-pill" placeholder="Search By Id, Name" style="width:100%;" autocomplete="off" data-action="keyup->form-submit#submit">
+				</div>
+			</div>
+			<div class="col-lg-1 px-1 text-right" style="padding-right: 5px;">
+				<input type="submit" value="Search" class="btn btn-success btn-block btn-lg" style="height:35px;" hidden>
+			</div>
+		</div>
+	</div>
+	<%end%>
+	<%=turbo_frame_tag "don_1" do%>
+	<div class="col-lg-12">
+		<div class="ibox-content">
+			<div class="row">
+				<div class="table-responsive">
+					<table class="table table-striped">
+						<thead class="py-2">
+							<tr>
+								<th  class="bg-primary bg-gradient text-white text-center"><b>Id</b></th>
+								<th  class="bg-primary bg-gradient text-white text-center"><b>First Name</b></th>
+								<th  class="bg-primary bg-gradient text-white text-center"><b>Last Name</b></th>
+								<th  class="bg-primary bg-gradient text-white text-center"><b>Course</b></th>
+								<th  class="bg-primary bg-gradient text-white text-center"><b>Email</b></th>
+								<th  class="bg-primary bg-gradient text-white text-center"><b>Number</b></th>
+								<th  class="bg-primary bg-gradient text-white text-center"><b>Created at</b></th>
+								<th  class="bg-primary bg-gradient text-white text-center"><b>Action</b></th>
+							</tr>
+						</thead>
+						<tbody>
+							<% @users.all.each do |user| %>
+							<tr>
+								<td class="lh-lg text-center">
+									<%= user.id %>
+								</td>
+								<td class="lh-lg text-center">
+									<%= user.fname%>
+								</td>
+								<td class="lh-lg text-center">
+									<%= user.lname%>
+								</td>
+								<td class="lh-lg text-center">
+									<%= user.course&.course_name%>
+								</td>
+								<td class="text-center">
+									<%= user.email%>
+								</td>
+								<td class="lh-lg text-center">
+									<%= user.number%>
+								</td>
+								
+								<td class="lh-lg text-center">
+									<%= user.created_at.strftime("%d %B %Y %H:%M") %>
+								</td>
+								<td class="text-center">
+									<%=link_to "View", root_path(id: user.id), class:"btn btn-primary fs-7 smaller-button" ,data: { "turbo-frame": "don" } %>
+									<%=link_to "Edit", root_path(id: user.id), class:"btn btn-primary fs-7 smaller-button" ,data: { "turbo-frame": "don" } %>
+									<%= link_to "Delete", root_path(user), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger fs-7 smaller-button" %>
+									<%#= link_to "Folder", root_path(id:user.id),data: { "turbo-frame" => "don" } , class:"btn btn-secondary"%>
+								</td>
+							</tr>
+							<% end %>
+						</tbody>
+					</table>
+					<div class="row">
+						<div class="col-lg-12">
+							<div class="container pagination justify-content-center">
+								<%#= will_paginate @categories, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+	<%end%>
+</div>
+<%end%>

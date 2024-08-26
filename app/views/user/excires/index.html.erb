@@ -1,0 +1,159 @@
+<style>
+.ibox-title {
+padding: 15px;
+}
+</style>
+<%=turbo_frame_tag "don" do%>
+<div class="wrapper wrapper-content animated fadeIn">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="ibox float-e-margins">
+				<div class="d-flex justify-content-between align-items-center ibox-title" style="border-radius: 10px;">
+					<div class="list text-black">
+						<h2 class="mb-1">Excries List</h2>
+						<ol class="breadcrumb">
+							<li class="breadcrumb-item">
+								<a href="<%= root_path %>">Dashboard </a>
+							</li>
+						</ol>
+					</div>
+					<%if current_user.role == "admin"%>
+					<%= link_to "Add Excries", new_user_excire_path,data: { "turbo-frame": "don" } , class:"btn btn-primary fw-bolder"%>
+					<%end%>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- <div class="row"> -->
+	<div class="form-group mb-3">
+		<%= form_with url: root_path, method: :get, local: true, html: { data: { 'turbo-frame' => 'don_1', controller: "form-submit", form_submit_target: "form" } } do |form| %>
+		<div class="row">
+			<div class="col-sm-6 col-lg-6">
+				<div class="form-group has-search text-right ml-auto">
+					<input type="text" value="<%=params[:keyword]%>" name="keyword" class="form-control py-2 px-3 lh-lg rounded-pill" placeholder="Search By Id, Name" style="width:100%;" autocomplete="off" data-action="keyup->form-submit#submit">
+				</div>
+			</div>
+			<div class="col-lg-1 px-1 text-right" style="padding-right: 5px;">
+				<input type="submit" value="Search" class="btn btn-success btn-block btn-lg" style="height:35px;" hidden>
+			</div>
+		</div>
+	</div>
+	<%end%>
+	<%=turbo_frame_tag "don_1" do%>
+	<div class="col-lg-12">
+		<div class="ibox-content">
+			<div class="row">
+				<div class="table-responsive">
+					<table class="table table-striped">
+						<thead class="py-2">
+							<tr>
+								<th  class="bg-primary bg-gradient text-white text-center"><b>Id</b></th>
+								<th  class="bg-primary bg-gradient text-white text-center"><b>Title</b></th>
+								<th  class="bg-primary bg-gradient text-white text-center"><b>Created at</b></th>
+								<th  class="bg-primary bg-gradient text-white text-center"><b>Action</b></th>
+							</tr>
+						</thead>
+						<tbody>
+							<% @excires.each do |cat| %>
+							<tr>
+								<td class="lh-lg text-center">
+									<%= cat.id %>
+								</td>
+								<td class="text-center">
+									<%= cat.title %>
+								</td>
+								<td class="lh-lg text-center">
+									<%= cat.created_at.strftime("%d %B %Y %H:%M") %>
+								</td>
+								<td class="text-center">
+									<%= link_to "Done", "#",
+									class: "btn btn-primary fs-7 smaller-button",
+									data: {
+									turbo_frame: "don",
+									bs_toggle: "modal",
+									bs_target: "#staticBackdrop",
+									excrise_id: cat.id
+									}
+									%>
+									<%=link_to "Edit", root_path(id: cat.id), class:"btn btn-primary fs-7 smaller-button" ,data: { "turbo-frame": "don" } %>
+									<%= link_to "Delete", root_path(cat), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger fs-7 smaller-button" %>
+								</td>
+							</tr>
+							<% end %>
+						</tbody>
+					</table>
+					<div class="row">
+						<div class="col-lg-12">
+							<div class="container pagination justify-content-center">
+								<%#= will_paginate @categories, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+	<%end%>
+</div>
+<%end%>
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" style="max-width: 1000px;">
+		<%# <form action="/user/excires/sumbit_code" method="POST" enctype="multipart/form-data"> %>
+			<%= form_with(model: @excrise, url: user_excires_sumbit_code_path(@excrise), method: :put, html: { enctype: "multipart/form-data" }) do |form| %>
+			<div class="modal-content">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="staticBackdropLabel">Sumbit Your program</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<!-- Summernote textarea -->
+					<textarea id="summernote"  name="code_sumbit"></textarea>
+					<%# user_excires_sumbit_code %>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					<input type="submit" name="" class="btn btn-primary" placeholder="Save">
+				</div>
+			</div>
+			<%end%>
+		<%# </form> %>
+	</div>
+</div>
+<!-- Modal -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Include Bootstrap CSS and JS -->
+<!-- Include Summernote CSS and JS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    $('#summernote').summernote({
+        height: 200,
+        toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'underline', 'clear']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['insert', ['link', 'picture', 'video']],
+            ['view', ['fullscreen', 'codeview', 'help']]
+        ],
+        callbacks: {
+            onPaste: function(e) {
+                var bufferText = (e.originalEvent || e).clipboardData.getData('text/plain');
+                e.preventDefault();
+                document.execCommand('insertText', false, bufferText);
+            }
+        }
+    });
+});
+</script>
+
+<script type="text/javascript">
+	$('textarea').bind('cut copy paste', function(e) {
+  e.preventDefault(); //disable cut,copy,paste
+});
+</script>
